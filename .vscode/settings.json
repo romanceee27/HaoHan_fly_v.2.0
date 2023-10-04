@@ -12,6 +12,8 @@
         "inv_mpu_dmp_motion_driver.h": "c",
         "dmpmap.h": "c",
         "dmpkey.h": "c",
-        "led.h": "c"
+        "led.h": "c",
+        "spl06.h": "c",
+        "stdint.h": "c"
     }
 }
