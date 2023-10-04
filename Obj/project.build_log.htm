@@ -1,0 +1,164 @@
+<html>
+<body>
+<pre>
+<h1>�Vision Build Log</h1>
+<h2>Tool Versions:</h2>
+IDE-Version: ��Vision V5.28.0.0
+Copyright (C) 2019 ARM Ltd and ARM Germany GmbH. All rights reserved.
+License Information: 1 romanticzhang666@outlook.com, 1, LIC=TA301-C6US5-669QS-LCJGD-ND0AX-8ZKU3
+ 
+Tool Versions:
+Toolchain:       MDK-ARM Professional  Version: 5.28.0.0
+Toolchain Path:  D:\AAA_Keil\Keil5_MDK\ARM\ARMCC\Bin
+C Compiler:      Armcc.exe V5.06 update 6 (build 750)
+Assembler:       Armasm.exe V5.06 update 6 (build 750)
+Linker/Locator:  ArmLink.exe V5.06 update 6 (build 750)
+Library Manager: ArmAr.exe V5.06 update 6 (build 750)
+Hex Converter:   FromElf.exe V5.06 update 6 (build 750)
+CPU DLL:         SARMCM3.DLL V5.28.0.0
+Dialog DLL:      DCM.DLL V1.17.3.0
+Target DLL:      UL2CM3.DLL V1.162.16.0
+Dialog DLL:      TCM.DLL V1.36.2.0
+ 
+<h2>Project:</h2>
+C:\Users\roman\Desktop\Fly\Code\project.uvprojx
+Project File Date:  10/04/2023
+
+<h2>Output:</h2>
+*** Using Compiler 'V5.06 update 6 (build 750)', folder: 'D:\AAA_Keil\Keil5_MDK\ARM\ARMCC\Bin'
+Build target 'Target 1'
+compiling inv_mpu.c...
+.\USER\INC\inv_mpu.h(42): error:  #169: expected a declaration
+  };
+USER\SRC\inv_mpu.c(105): error:  #35: #error directive: Gyro driver is missing the system layer implementations.
+  #error  Gyro driver is missing the system layer implementations.
+USER\SRC\inv_mpu.c: 0 warnings, 2 errors
+compiling spl06.c...
+USER\SRC\spl06.c(1): warning:  #1-D: last line of file ends without a newline
+  #include "spl06.h"
+.\USER\INC\spl06.h(1): warning:  #1-D: last line of file ends without a newline
+  ��\021�?
+.\USER\INC\spl06.h(1): error:  #7: unrecognized token
+  ��\021�?
+.\USER\INC\spl06.h(1): error:  #77-D: this declaration has no storage class or type specifier
+  ��\021�?
+.\USER\INC\spl06.h(1): error:  #65: expected a ";"
+  ��\021�?
+.\USER\INC\spl06.h(1): error:  #7: unrecognized token
+  ��\021�?
+USER\SRC\spl06.c: 2 warnings, 4 errors
+compiling inv_mpu_dmp_motion_driver.c...
+.\USER\INC\inv_mpu.h(42): error:  #169: expected a declaration
+  };
+USER\SRC\inv_mpu_dmp_motion_driver.c(66): error:  #35: #error directive: Gyro driver is missing the system layer implementations.
+  #error  Gyro driver is missing the system layer implementations.
+USER\SRC\inv_mpu_dmp_motion_driver.c: 0 warnings, 2 errors
+compiling stm32f4xx_it.c...
+.\USER\INC\stm32f4xx_it.h(10): error:  #5: cannot open source input file "led8.h": No such file or directory
+  #include "led8.h"
+USER\SRC\stm32f4xx_it.c: 0 warnings, 1 error
+compiling main.c...
+.\USER\INC\main.h(11): error:  #5: cannot open source input file "param.h": No such file or directory
+  #include "param.h"
+USER\SRC\main.c: 0 warnings, 1 error
+compiling mpu6050.c...
+.\USER\INC\i2c.h(9): error:  #169: expected a declaration
+  {
+.\USER\INC\i2c.h(14): error:  #169: expected a declaration
+  {
+USER\SRC\mpu6050.c(15): warning:  #223-D: function "RCC_APB2PeriphClockCmd" declared implicitly
+      RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);  // 使能AFIO时钟
+USER\SRC\mpu6050.c(15): error:  #20: identifier "RCC_APB2Periph_AFIO" is undefined
+      RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);  // 使能AFIO时钟
+USER\SRC\mpu6050.c(16): error:  #20: identifier "RCC_APB2Periph_GPIOA" is undefined
+      RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE); // 先使能外设IO PORTA时钟
+USER\SRC\mpu6050.c(19): error:  #20: identifier "GPIO_Mode_Out_PP" is undefined
+      GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;  // 推挽输出
+USER\SRC\mpu6050.c(23): warning:  #223-D: function "GPIO_PinRemapConfig" declared implicitly
+      GPIO_PinRemapConfig(GPIO_Remap_SWJ_JTAGDisable, ENABLE); // 禁止JTAG,从而PA15可以做普通IO使用,否则PA15不能做普通IO!!!
+USER\SRC\mpu6050.c(23): error:  #20: identifier "GPIO_Remap_SWJ_JTAGDisable" is undefined
+      GPIO_PinRemapConfig(GPIO_Remap_SWJ_JTAGDisable, ENABLE); // 禁止JTAG,从而PA15可以做普通IO使用,否则PA15不能做普通IO!!!
+USER\SRC\mpu6050.c(29): warning:  #223-D: function "delay_ms" declared implicitly
+      delay_ms(100);
+USER\SRC\mpu6050.c: 3 warnings, 6 errors
+compiling i2c.c...
+.\USER\INC\i2c.h(9): error:  #169: expected a declaration
+  {
+.\USER\INC\i2c.h(14): error:  #169: expected a declaration
+  {
+USER\SRC\i2c.c(11): warning:  #223-D: function "delay_us" declared implicitly
+      delay_us(4);
+USER\SRC\i2c.c(24): warning:  #223-D: function "RCC_APB2PeriphClockCmd" declared implicitly
+      RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE); // 先使能外设IO PORTB时钟
+USER\SRC\i2c.c(24): error:  #20: identifier "RCC_APB2Periph_GPIOB" is undefined
+      RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE); // 先使能外设IO PORTB时钟
+USER\SRC\i2c.c(27): error:  #20: identifier "GPIO_Mode_Out_PP" is undefined
+      GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;         // 推挽输出
+USER\SRC\i2c.c(182): error:  #169: expected a declaration
+  u8 MPU_IIC_Read_Byte() FromSlave(uint8_t IIC_ADDR, uint8_t reg, uint8_t *buf)
+USER\SRC\i2c.c(246): warning:  #12-D: parsing restarts here after previous syntax error
+          data[count] = temp;
+USER\SRC\i2c.c(182): error:  #247: function "MPU_IIC_Read_Byte"  has already been defined
+  u8 MPU_IIC_Read_Byte() FromSlave(uint8_t IIC_ADDR, uint8_t reg, uint8_t *buf)
+USER\SRC\i2c.c(247): error:  #130: expected a "{"
+      }
+USER\SRC\i2c.c(247): warning:  #940-D: missing return statement at end of non-void function "MPU_IIC_Read_Byte" 
+      }
+USER\SRC\i2c.c(248): warning:  #1295-D: Deprecated declaration MPU_IIC_Stop - give arg types
+      MPU_IIC_Stop(); // 产生一个停止条�?
+USER\SRC\i2c.c(248): error:  #260-D: explicit type is missing ("int" assumed)
+      MPU_IIC_Stop(); // 产生一个停止条�?
+USER\SRC\i2c.c(248): error:  #147: declaration is incompatible with "void MPU_IIC_Stop(void)"  (declared at line 57)
+      MPU_IIC_Stop(); // 产生一个停止条�?
+USER\SRC\i2c.c(249): error:  #169: expected a declaration
+      return 0;
+USER\SRC\i2c.c(250): error:  #169: expected a declaration
+  }
+USER\SRC\i2c.c(274): warning:  #12-D: parsing restarts here after previous syntax error
+      return 0;
+USER\SRC\i2c.c(275): error:  #169: expected a declaration
+  }
+USER\SRC\i2c.c(405): warning: At end of source:  #12-D: parsing restarts here after previous syntax error
+USER\SRC\i2c.c: 7 warnings, 12 errors
+compiling tim4.c...
+USER\SRC\tim4.c(54): warning:  #223-D: function "pwm_out" declared implicitly
+  		pwm_out(&Steering_Engine[0]);
+USER\SRC\tim4.c(54): error:  #20: identifier "Steering_Engine" is undefined
+  		pwm_out(&Steering_Engine[0]);
+USER\SRC\tim4.c: 1 warning, 1 error
+".\Obj\project.axf" - 29 Error(s), 13 Warning(s).
+
+<h2>Software Packages used:</h2>
+
+Package Vendor: ARM
+                http://www.keil.com/pack/ARM.CMSIS.5.9.0.pack
+                ARM.CMSIS.5.9.0
+                CMSIS (Common Microcontroller Software Interface Standard)
+   * Component: CORE Version: 5.6.0
+
+Package Vendor: Keil
+                https://www.keil.com/pack/Keil.STM32F4xx_DFP.2.17.0.pack
+                Keil.STM32F4xx_DFP.2.17.0
+                STMicroelectronics STM32F4 Series Device Support, Drivers and Examples
+   * Component: Startup Version: 2.6.3
+
+<h2>Collection of Component include folders:</h2>
+  .\RTE\_Target_1
+  D:\AAA_Keil\Keil5_MDK\ARM\CMSIS\5.9.0\CMSIS\Core\Include
+  D:\AAA_Keil\Keil5_MDK\Keil\STM32F4xx_DFP\2.17.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include
+
+<h2>Collection of Component Files used:</h2>
+
+   * Component: ARM::CMSIS:CORE:5.6.0
+
+   * Component: Keil::Device:Startup:2.6.3
+      Source file:   MDK\Device\Source\ARM\STM32F4xx_OTP.s
+      Source file:   Drivers\CMSIS\Device\ST\STM32F4xx\Source\Templates\arm\startup_stm32f405xx.s
+      Source file:   MDK\Device\Source\ARM\STM32F40xxx_41xxx_OPT.s
+      Include file:  Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h
+      Source file:   Drivers\CMSIS\Device\ST\STM32F4xx\Source\Templates\system_stm32f4xx.c
+Target not created.
+Build Time Elapsed:  00:00:01
+</pre>
+</body>
+</html>

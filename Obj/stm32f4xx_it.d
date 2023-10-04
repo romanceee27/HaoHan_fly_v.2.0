@@ -1,0 +1,13 @@
+.\obj\stm32f4xx_it.o: USER\SRC\stm32f4xx_it.c
+.\obj\stm32f4xx_it.o: .\USER\INC\stm32f4xx_it.h
+.\obj\stm32f4xx_it.o: .\Libraries\CMSIS\stm32f4xx.h
+.\obj\stm32f4xx_it.o: D:\AAA_Keil\Keil5_MDK\ARM\CMSIS\5.9.0\CMSIS\Core\Include\core_cm4.h
+.\obj\stm32f4xx_it.o: D:\AAA_Keil\Keil5_MDK\ARM\ARMCC\Bin\..\include\stdint.h
+.\obj\stm32f4xx_it.o: D:\AAA_Keil\Keil5_MDK\ARM\CMSIS\5.9.0\CMSIS\Core\Include\cmsis_version.h
+.\obj\stm32f4xx_it.o: D:\AAA_Keil\Keil5_MDK\ARM\CMSIS\5.9.0\CMSIS\Core\Include\cmsis_compiler.h
+.\obj\stm32f4xx_it.o: D:\AAA_Keil\Keil5_MDK\ARM\CMSIS\5.9.0\CMSIS\Core\Include\cmsis_armcc.h
+.\obj\stm32f4xx_it.o: D:\AAA_Keil\Keil5_MDK\ARM\CMSIS\5.9.0\CMSIS\Core\Include\mpu_armv7.h
+.\obj\stm32f4xx_it.o: .\Libraries\CMSIS\system_stm32f4xx.h
+.\obj\stm32f4xx_it.o: .\USER\INC\stm32f4xx_conf.h
+.\obj\stm32f4xx_it.o: .\Libraries\STM32F4xx_StdPeriph_Driver\inc\misc.h
+.\obj\stm32f4xx_it.o: .\Libraries\CMSIS\stm32f4xx.h

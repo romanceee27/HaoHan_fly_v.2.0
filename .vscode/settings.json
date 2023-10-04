@@ -1,0 +1,17 @@
+{
+    "editor.suggest.snippetsPreventQuickSuggestions": false,
+    "aiXcoder.showTrayIcon": true,
+    "files.associations": {
+        "i2c.h": "c",
+        "stm32f4xx_rcc.h": "c",
+        "sys.h": "c",
+        "stm32f4xx_i2c.h": "c",
+        "delay.h": "c",
+        "mpu6050.h": "c",
+        "inv_mpu.h": "c",
+        "inv_mpu_dmp_motion_driver.h": "c",
+        "dmpmap.h": "c",
+        "dmpkey.h": "c",
+        "led.h": "c"
+    }
+}
