@@ -36,8 +36,8 @@ u8 MPU_Init(void)
     MPU_Write_Byte(MPU_FIFO_EN_REG, 0X00);   // 关闭FIFO
     MPU_Write_Byte(MPU_INTBP_CFG_REG, 0X80); // INT引脚低电平有效
 
-    res = MPU_Read_Byte(MPU_DEVICE_ID_REG);
-    if (res == MPU_ADDR) // 器件ID正确,即res = MPU_ADDR = 0x68
+    res = MPU_Read_Byte(MPU_SIGPATH_RST_REG, MPU_DEVICE_ID_REG);
+    if (res == addr) // 器件ID正确,即res = addr = 0x68
     {
         MPU_Write_Byte(MPU_PWR_MGMT1_REG, 0X01); // 设置CLKSEL,PLL X轴为参考
         MPU_Write_Byte(MPU_PWR_MGMT2_REG, 0X00); // 加速度与陀螺仪都工作
@@ -125,7 +125,7 @@ short MPU_Get_Temperature(void)
     short raw;
     float temp;
 
-    MPU_Read_Len(MPU_ADDR, MPU_TEMP_OUTH_REG, 2, buf);
+    MPU_Read_Len(addr, MPU_TEMP_OUTH_REG, 2, buf);
     raw = ((u16)buf[0] << 8) | buf[1];
     temp = 36.53 + ((double)raw) / 340;
     return temp * 100;
@@ -141,7 +141,7 @@ u8 MPU_Get_Gyroscope(short *gx, short *gy, short *gz)
 {
     u8 buf[6], res;
 
-    res = MPU_Read_Len(MPU_ADDR, MPU_GYRO_XOUTH_REG, 6, buf);
+    res = MPU_Read_Len(addr, MPU_GYRO_XOUTH_REG, 6, buf);
     if (res == 0)
     {
         *gx = ((u16)buf[0] << 8) | buf[1];
@@ -160,7 +160,7 @@ u8 MPU_Get_Gyroscope(short *gx, short *gy, short *gz)
 u8 MPU_Get_Accelerometer(short *ax, short *ay, short *az)
 {
     u8 buf[6], res;
-    res = MPU_Read_Len(MPU_ADDR, MPU_ACCEL_XOUTH_REG, 6, buf);
+    res = MPU_Read_Len(addr, MPU_ACCEL_XOUTH_REG, 6, buf);
     if (res == 0)
     {
         *ax = ((u16)buf[0] << 8) | buf[1];
@@ -246,8 +246,8 @@ u8 MPU_Read_Len(u8 addr, u8 reg, u8 len, u8 *buf)
 u8 MPU_Write_Byte(u8 reg, u8 data)
 {
     MPU_IIC_Start();
-    MPU_IIC_Send_Byte((MPU_ADDR << 1) | 0); // 发送器件地址+写命令
-    if (MPU_IIC_Wait_Ack())                 // 等待应答
+    MPU_IIC_Send_Byte((addr << 1) | 0); // 发送器件地址+写命令
+    if (MPU_IIC_Wait_Ack())             // 等待应答
     {
         MPU_IIC_Stop();
         return 1;
@@ -264,25 +264,29 @@ u8 MPU_Write_Byte(u8 reg, u8 data)
     return 0;
 }
 
-/**********************************************
-函数名称：MPU_Read_Byte
-函数功能：IIC读一个字节
-函数参数：reg:要读的寄存器地址
-函数返回值：res:读取到的数据
-**********************************************/
-u8 MPU_Read_Byte(u8 reg)
+uint8_t IIC_Write_
+
+    /**********************************************
+    函数名称：MPU_Read_Byte
+    函数功能：IIC读一个字节
+    函数参数：addr:设备地址；reg:要读的寄存器地址
+    函数返回值：res:读取到的数据
+    **********************************************/
+    u8
+    MPU_Read_Byte(uint8_t addr, uint8_t reg，uin8_t *buf)
 {
     u8 res;
 
     MPU_IIC_Start();
-    MPU_IIC_Send_Byte((MPU_ADDR << 1) | 0); // 发送器件地址+写命令
-    MPU_IIC_Wait_Ack();                     // 等待应答
-    MPU_IIC_Send_Byte(reg);                 // 写寄存器地址
-    MPU_IIC_Wait_Ack();                     // 等待应答
+    MPU_IIC_Send_Byte(addr); // 发送器件地址+写命令
+    MPU_IIC_Wait_Ack();      // 等待应答
+    MPU_IIC_Send_Byte(reg);  // 写寄存器地址
+    MPU_IIC_Wait_Ack();      // 等待应答
     MPU_IIC_Start();
-    MPU_IIC_Send_Byte((MPU_ADDR << 1) | 1); // 发送器件地址+读命令
-    MPU_IIC_Wait_Ack();                     // 等待应答
-    res = MPU_IIC_Read_Byte(0);             // 读取数据,发送nACK
-    MPU_IIC_Stop();                         // 产生一个停止条件
+    MPU_IIC_Send_Byte(addr + 1); // 发送器件地址+读命令
+    MPU_IIC_Wait_Ack();          // 等待应答
+    res = MPU_IIC_Read_Byte(0);  // 读取数据,发送nACK
+    *buf = MPU_IIC_Read_Byte(0);
+    MPU_IIC_Stop(); // 产生一个停止条件
     return res;
 }

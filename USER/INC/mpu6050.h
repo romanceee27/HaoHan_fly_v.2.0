@@ -93,8 +93,8 @@
 u8 MPU_Init(void);                                  // 初始化MPU6050
 u8 MPU_Write_Len(u8 addr, u8 reg, u8 len, u8 *buf); // IIC连续写
 u8 MPU_Read_Len(u8 addr, u8 reg, u8 len, u8 *buf);  // IIC连续读
-u8 MPU_Write_Byte(u8 reg, u8 data);                 // IIC写一个字节
-u8 MPU_Read_Byte(u8 reg);                           // IIC读一个字节
+u8 MPU_Write_Byte(u8 reg, u8 data);
+u8 MPU_Read_Byte(uint8_t addr, uint8_t reg); // IIC写一个字节
 
 u8 MPU_Set_Gyro_Fsr(u8 fsr);
 u8 MPU_Set_Accel_Fsr(u8 fsr);

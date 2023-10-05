@@ -32,12 +32,12 @@ void MPU_IIC_Init(void)
 }
 
 /**********************************************
-函数名称：MPU_MPU_IIC_Start
+函数名称：MPU_IIC_Start
 函数功能：MPU IIC发送起始信号
 函数参数：无
 函数返回值：无
 **********************************************/
-void MPU_MPU_IIC_Start(void)
+void MPU_IIC_Start(void)
 {
     MPU_SDA_OUT(); // SDA线 输出
     MPU_IIC_SDA = 1;
@@ -177,6 +177,34 @@ u8 MPU_IIC_Read_Byte(unsigned char ack)
     else
         MPU_IIC_Ack(); // 发送ACK
     return receive;
+}
+
+uint8_t IIC_write_byte_len(uint8_t dev, uint8_t reg, uint8_t len, uint8_t *data)
+{
+    uint8_t i = 0;
+    MPU_IIC_Start();
+    MPU_IIC_Send_Byte(dev);
+
+    if (MPU_IIC_Wait_Ack())
+    {
+        MPU_IIC_Stop();
+        return 1;
+    }
+
+    MPU_IIC_Send_Byte(reg);
+    MPU_IIC_Wait_Ack();
+
+    for (i = 0; i < len; i++)
+    {
+        MPU_IIC_Send_Byte(data[i]);
+        if (MPU_IIC_Wait_Ack())
+        {
+            MPU_IIC_Stop();
+            return 1;
+        }
+    }
+    MPU_IIC_Stop();
+    return 0;
 }
 
 // #include "i2c.h"

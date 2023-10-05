@@ -31,8 +31,5 @@ u8 MPU_IIC_Read_Byte(unsigned char ack); // IIC读取一个字节
 u8 MPU_IIC_Wait_Ack(void);               // IIC等待ACK信号
 void MPU_IIC_Ack(void);                  // IIC发送ACK信号
 void MPU_IIC_NAck(void);                 // IIC不发送ACK信号
-
-void IMPU_IC_Write_One_Byte(u8 daddr, u8 addr, u8 data);
-u8 MPU_IIC_Read_One_Byte(u8 daddr, u8 addr);
-
+uint8_t IIC_write_byte_len(uint8_t dev, uint8_t reg, uint8_t len, uint8_t *data);
 #endif
