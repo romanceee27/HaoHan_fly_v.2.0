@@ -23,10 +23,10 @@
 #define TMP_B2_Addr 0x03
 #define TMP_B1_Addr 0x04
 #define TMP_B0_Addr 0x05
-#define PRS_CFG_Addr 0x06
-#define TMP_CFG_Addr 0x07
-#define MEAS_CFG_Addr 0x08
-#define CFG_REG_Addr 0x09
+#define PRS_CFG_Addr 0x06  // 压强采集的采样速率与过采样速率配置
+#define TMP_CFG_Addr 0x07  // 温度采集的采样速率与过采样速率配置
+#define MEAS_CFG_Addr 0x08 // 用来读取当前寄存器的工作状态以及采集模式的配置
+#define CFG_REG_Addr 0x09  // 配置中断以及压强数据与温度数据的位移
 #define RESET_Addr 0x0C
 #define ID_Addr 0x0D
 

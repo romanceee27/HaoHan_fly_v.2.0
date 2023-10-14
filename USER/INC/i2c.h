@@ -21,6 +21,10 @@
 #define MPU_IIC_SDA PBout(11) // SDA
 #define MPU_READ_SDA PBin(11) // 输入SDA
 
+#define IIC_SCL PBout(8) // SCL
+#define IIC_SDA PBout(8) // 输出SDA
+#define READ_SDA PBin(8) // 输入SDA
+
 // IIC所有操作函数
 void MPU_IIC_Delay(void);                // IIC延时2ms函数
 void MPU_IIC_Init(void);                 // 初始化IIC的IO口
@@ -32,4 +36,12 @@ u8 MPU_IIC_Wait_Ack(void);               // IIC等待ACK信号
 void MPU_IIC_Ack(void);                  // IIC发送ACK信号
 void MPU_IIC_NAck(void);                 // IIC不发送ACK信号
 uint8_t IIC_write_byte_len(uint8_t dev, uint8_t reg, uint8_t len, uint8_t *data);
+void IIC_Send_Byte(u8 txd);
+u8 IIC_Read_Byte(unsigned char ack);
+u8 IIC_Wait_Ack(void);
+void IIC_Start(void);
+void IIC_Stop(void);
+void IIC_Ack(void);
+void IIC_NAck(void);
+
 #endif

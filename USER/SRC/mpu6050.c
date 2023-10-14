@@ -1,5 +1,10 @@
 #include "mpu6050.h"
 
+static uint8_t MPU6050_buff[14];
+int16_xyz g_offset_raw, a_offset_raw; // 零飘数据
+int16_xyz g_raw, a_raw;               // 加速度和角速度原始值
+uint8_t SENSER_OFFSET_FLAG;
+
 /**********************************************
 函数名称：MPU_Init
 函数功能：初始化MPU6050
@@ -289,4 +294,118 @@ uint8_t IIC_Write_
     *buf = MPU_IIC_Read_Byte(0);
     MPU_IIC_Stop(); // 产生一个停止条件
     return res;
+}
+
+/******************************************************************************
+ * 函  数：void MPU6050_CalOff(void)
+ * 功  能：陀螺仪加速度校准
+ * 参  数：无
+ * 返回值：无
+ * 备  注：无
+ *******************************************************************************/
+void MPU6050_CalOff(void)
+{
+
+    SENSER_FLAG_SET(ACC_OFFSET);  // 加速度校准
+    SENSER_FLAG_SET(GYRO_OFFSET); // 陀螺仪校准
+}
+
+/******************************************************************************
+ * 函  数：void MPU6050_CalOff_Acc(void)
+ * 功  能：加速度计校准
+ * 参  数：无
+ * 返回值：无
+ * 备  注：无
+ *******************************************************************************/
+void MPU6050_CalOff_Acc(void)
+{
+    SENSER_FLAG_SET(ACC_OFFSET); // 加速度校准
+}
+
+/******************************************************************************
+ * 函  数：void MPU6050_CalOff_Gyr(void)
+ * 功  能：陀螺仪校准
+ * 参  数：无
+ * 返回值：无
+ * 备  注：无
+ *******************************************************************************/
+void MPU6050_CalOff_Gyr(void)
+{
+    SENSER_FLAG_SET(GYRO_OFFSET); // 陀螺仪校准
+}
+
+// 读取原始数据
+void mpu6050_read(void)
+{
+    MPU_Read_Len(addr, MPU_ACCEL_XOUTH_REG, 14, MPU6050_buff);
+}
+
+// 零飘校准
+uint8_t mpu6050_offset(int16_xyz value, int16_xyz *offset, uint16_t sensivity)
+{
+    static int32_t tempgx = 0, tempgy = 0, tempgz = 0;
+    static uint16_t cnt_a;
+    if (cnt_a == 0)
+    {
+        value.x = 0;
+        value.y = 0;
+        value.z = 0;
+
+        tempgx = 0;
+        tempgy = 0;
+        tempgz = 0;
+        cnt_a = 1;
+
+        sensivity = 0;
+        offset.x = 0;
+        offset.y = 0;
+        offset.z = 0;
+    }
+
+    tempgx += value.x;
+    tempgy += value.y;
+    tempgy += value.z - sensivity;
+    if (cnt_a == 200)
+    {
+        offset.x = tempgx / cnt_a;
+        offset.y = tempgy / cnt_a;
+        offset.z = tempgy / cnt_a;
+        cnt_a = 0;
+        return 1;
+    }
+
+    cnt_a++;
+    return 0;
+}
+
+// 去零偏
+void mpu_off(void)
+{
+    // 加速度
+    a_raw.x = ((((int16_t)mpu6050_buff[0]) << 8) | mpu6050_buff[1]) - a_offset_raw.x;
+    a_raw.y = ((((int16_t)mpu6050_buff[2]) << 8) | mpu6050_buff[3]) - a_offset_raw.y;
+    a_raw.z = ((((int16_t)mpu6050_buff[4]) << 8) | mpu6050_buff[5]) - a_offset_raw.z;
+
+    // 角速度
+    g_raw.x = ((((int16_t)mpu6050_buff[8]) << 8) | mpu6050_buff[9]) - g_offset_raw.x;
+    g_raw.y = ((((int16_t)mpu6050_buff[10]) << 8) | mpu6050_buff[11]) - g_offset_raw.y;
+    g_raw.z = ((((int16_t)mpu6050_buff[12]) << 8) | mpu6050_buff[13]) - g_offset_raw.z;
+
+    if ()
+}
+
+static float sqrt(float x)
+{
+    float halfx = 0.5f * x;
+    float y = x;
+    long i = *(long *)&y;
+    i = 0x5f375a86 - (i >> 1);
+    y = *(float *)&i;
+    y = y * (1.5f - (halfx * y * y));
+    return y;
+}
+
+void prepare_data(void)
+{
+    static uint8_t
 }

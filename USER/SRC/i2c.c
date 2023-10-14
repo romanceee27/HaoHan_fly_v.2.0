@@ -4,7 +4,7 @@
 函数名称：MPU_IIC_Delay
 函数功能：MPU IIC延时函数，延时2ms
 函数参数：无
-函数返回值：无
+函数返回值：无 
 **********************************************/
 void MPU_IIC_Delay(void)
 {
@@ -29,6 +29,15 @@ void MPU_IIC_Init(void)
     GPIO_Init(GPIOB, &GPIO_InitStructure);                   // 根据设定参数初始化GPIO
 
     GPIO_SetBits(GPIOB, GPIO_Pin_10 | GPIO_Pin_11); // PB10,PB11 输出高
+
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_7 | GPIO_Pin_8; // 端口配置
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;       // 推挽输出
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;      // IO口速度为50MHz
+    GPIO_Init(GPIOB, &GPIO_InitStructure);                 // 根据设定参数初始化GPIO
+
+    GPIO_SetBits(GPIOB, GPIO_Pin_7 | GPIO_Pin_8); // PB10,PB11 输出高
+
+    GPIO_InitTypeDef GPIO_InitStructure;
 }
 
 /**********************************************
@@ -179,34 +188,144 @@ u8 MPU_IIC_Read_Byte(unsigned char ack)
     return receive;
 }
 
-uint8_t IIC_write_byte_len(uint8_t dev, uint8_t reg, uint8_t len, uint8_t *data)
+// uint8_t IIC_write_byte_len(uint8_t dev, uint8_t reg, uint8_t len, uint8_t *data)
+// {
+//     uint8_t i = 0;
+//     MPU_IIC_Start();
+//     MPU_IIC_Send_Byte(dev);
+
+//     if (MPU_IIC_Wait_Ack())
+//     {
+//         MPU_IIC_Stop();
+//         return 1;
+//     }
+
+//     MPU_IIC_Send_Byte(reg);
+//     MPU_IIC_Wait_Ack();
+
+//     for (i = 0; i < len; i++)
+//     {
+//         MPU_IIC_Send_Byte(data[i]);
+//         if (MPU_IIC_Wait_Ack())
+//         {
+//             MPU_IIC_Stop();
+//             return 1;
+//         }
+//     }
+//     MPU_IIC_Stop();
+//     return 0;
+// }
+
+// 产生I2C起始信号(即START信号)
+void IIC_Start(void)
 {
-    uint8_t i = 0;
-    MPU_IIC_Start();
-    MPU_IIC_Send_Byte(dev);
-
-    if (MPU_IIC_Wait_Ack())
+    SDA_OUT();
+    IIC_SDA = 1;
+    IIC_SCL = 1;
+    delay_us(4);
+    IIC_SDA = 0; // START:when CLK is high,DATA change form high to low
+    delay_us(4);
+    IIC_SCL = 0;
+}
+// 产生I2C停止信号(即STOP信号)
+void IIC_Stop(void)
+{
+    SDA_OUT();
+    IIC_SCL = 0;
+    IIC_SDA = 0; // STOP:when CLK is high DATA change form low to high
+    delay_us(4);
+    IIC_SCL = 1;
+    IIC_SDA = 1;
+    delay_us(4);
+}
+// 等待应答信号
+// 返回值：1，接收应答失败
+//         0，接收应答成功
+u8 IIC_Wait_Ack(void)
+{
+    u8 ucErrTime = 0;
+    SDA_IN();
+    IIC_SDA = 1;
+    delay_us(1);
+    IIC_SCL = 1;
+    delay_us(1);
+    while (READ_SDA)
     {
-        MPU_IIC_Stop();
-        return 1;
-    }
-
-    MPU_IIC_Send_Byte(reg);
-    MPU_IIC_Wait_Ack();
-
-    for (i = 0; i < len; i++)
-    {
-        MPU_IIC_Send_Byte(data[i]);
-        if (MPU_IIC_Wait_Ack())
+        ucErrTime++;
+        if (ucErrTime > 250)
         {
-            MPU_IIC_Stop();
+            IIC_Stop();
             return 1;
         }
     }
-    MPU_IIC_Stop();
+    IIC_SCL = 0;
     return 0;
 }
 
+// 产生ACK应答信号
+void IIC_Ack(void)
+{
+    IIC_SCL = 0;
+    SDA_OUT();
+    IIC_SDA = 0;
+    delay_us(2);
+    IIC_SCL = 1;
+    delay_us(2);
+    IIC_SCL = 0;
+}
+// 不产生ACK应答信号
+void IIC_NAck(void)
+{
+    IIC_SCL = 0;
+    SDA_OUT();
+    IIC_SDA = 1;
+    delay_us(2);
+    IIC_SCL = 1;
+    delay_us(2);
+    IIC_SCL = 0;
+}
+
+// I2C发送一个字节
+// 返回从机有无应答
+// 1，有应答
+// 0，无应答
+void IIC_Send_Byte(u8 txd)
+{
+    u8 t;
+    SDA_OUT();
+    IIC_SCL = 0;
+    for (t = 0; t < 8; t++)
+    {
+        IIC_SDA = (txd & 0x80) >> 7;
+        txd <<= 1;
+        delay_us(2);
+        IIC_SCL = 1;
+        delay_us(2);
+        IIC_SCL = 0;
+        delay_us(2);
+    }
+}
+// 读1个字节，ack=1时，发送ACK，ack=0时，发送nACK
+u8 IIC_Read_Byte(unsigned char ack)
+{
+    unsigned char i, receive = 0;
+    SDA_IN();
+    for (i = 0; i < 8; i++)
+    {
+        IIC_SCL = 0;
+        delay_us(2);
+        IIC_SCL = 1;
+        receive <<= 1;
+        if (READ_SDA)
+            receive++;
+        delay_us(1);
+    }
+    if (!ack)
+        IIC_NAck();
+    else
+        IIC_Ack();
+    return receive;
+}
 // #include "i2c.h"
 
 // void i2c_init(void)

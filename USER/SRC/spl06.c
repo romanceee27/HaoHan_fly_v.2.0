@@ -25,7 +25,7 @@ u8 SPL06_Read_Byte(u8 addr)
     MPU_IIC_Start(); // start again
     MPU_IIC_Send_Byte(SPL06_Read);
     MPU_IIC_Wait_Ack();
-    SPL06_Data = IIC_Read_Byte(0);
+    SPL06_Data = MPU_IIC_Read_Byte(0);
     MPU_IIC_Stop();
     return SPL06_Data;
 }

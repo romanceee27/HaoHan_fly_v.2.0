@@ -15,6 +15,20 @@
 // #define MPU_ACCEL_OFFS_REG		0X06	//accel_offs寄存器,可读取版本号,寄存器手册未提到
 // #define MPU_PROD_ID_REG			0X0C	//prod id寄存器,在寄存器手册未提到
 
+// 每一位对应功能
+#define GYRO_OFFSET 0x01 // 第一位陀螺仪校准标志位
+#define ACC_OFFSET 0x02  // 第二位加速度校准标志位
+#define BAR_OFFSET 0x04  // 第三位气压计校准标志位
+#define MAG_OFFSET 0x08  // 第四位磁力计校准标志位
+#define FLY_ENABLE 0x10  // 第五位解锁上锁
+#define WiFi_ONOFF 0x20  // 第六位WiFi开关
+#define FLY_MODE 0x40    // 第七位模式选择(0:无头模式(默认) 1:有头模式)
+
+// 对 SENSER_OFFSET_FLAG 的位的操作
+#define SENSER_FLAG_SET(FLAG) SENSER_OFFSET_FLAG |= FLAG           // 标志位置1
+#define SENSER_FLAG_RESET(FLAG) SENSER_OFFSET_FLAG &= ~FLAG        // 标志位值0
+#define GET_FLAG(FLAG) (SENSER_OFFSET_FLAG & FLAG) == FLAG ? 1 : 0 // 获取标志位状态
+
 #define MPU_SELF_TESTX_REG 0X0D   // 自检寄存器X
 #define MPU_SELF_TESTY_REG 0X0E   // 自检寄存器Y
 #define MPU_SELF_TESTZ_REG 0X0F   // 自检寄存器Z
@@ -89,6 +103,36 @@
 // 因为模块AD0默认接GND,所以转为读写地址后,为0XD1和0XD0(如果接VCC,则为0XD3和0XD2)
 // #define MPU_READ    				0XD1
 // #define MPU_WRITE   				0XD0
+
+extern uint8_t SENSER_OFFSET_FLAG
+
+#define SENSER_FLAG_SET(FLAG) SENSER_OFFSET_FLAG |= FLAG           // 标志位置1
+#define SENSER_FLAG_RESET(FLAG) SENSER_OFFSET_FLAG &= ~FLAG        // 标志位值0
+#define GET_FLAG(FLAG) (SENSER_OFFSET_FLAG & FLAG) == FLAG ? 1 : 0 // 获取标志位状态
+
+    // 三轴整形，原始数据
+    typedef struct
+{
+    int16_t x;
+    int16_t y;
+    int16_t z;
+} int16_xyz;
+
+// 三轴浮点型
+typedef struct
+{
+    float x;
+    float y;
+    float z;
+} float_xyz;
+
+// 姿态解算后的欧拉角
+typedef struct
+{
+    float rol;
+    float yaw;
+    float pitch;
+} float_angle;
 
 u8 MPU_Init(void);                                  // 初始化MPU6050
 u8 MPU_Write_Len(u8 addr, u8 reg, u8 len, u8 *buf); // IIC连续写
