@@ -3,18 +3,31 @@
 #include "sys.h"
 #include "stm32f4xx.h"
 #include "delay.h"
+#include "stm32f4xx_rcc.h"
 
-// IO方向设置  ---PB11
-#define MPU_SDA_IN()
-{
-    GPIOB->CRH &= 0XFFFF0FFF;
-    GPIOB->CRH |= 8 << 12;
-} // 上拉/下拉 输入模式
-#define MPU_SDA_OUT()
-{
-    GPIOB->CRH &= 0XFFFF0FFF;
-    GPIOB->CRH |= 3 << 12;
-} // 推挽输出  输出模式
+#define MPU_SDA_IN()                          \
+    {                                     \
+        GPIOB->MODER &= ~(3 << (11 * 2)); \
+        GPIOB->MODER |= 0 << 11 * 2;      \
+    }
+
+#define MPU_SDA_OUT()                         \
+    {                                     \
+        GPIOB->MODER &= ~(3 << (11 * 2)); \
+        GPIOB->MODER |= 1 << 11 * 2;      \
+    }
+
+// // IO方向设置  ---PB11
+// #define MPU_SDA_IN()              \
+//     {                             \
+//         GPIOB->CRH &= 0XFFFF0FFF; \
+//         GPIOB->CRH |= 8 << 12;    \
+//     } // 上拉/下拉 输入模式
+// #define MPU_SDA_OUT()             \
+//     {                             \
+//         GPIOB->CRH &= 0XFFFF0FFF; \
+//         GPIOB->CRH |= 3 << 12;    \
+//     } // 推挽输出  输出模式
 
 // IO操作函数
 #define MPU_IIC_SCL PBout(10) // SCL
@@ -35,13 +48,13 @@ u8 MPU_IIC_Read_Byte(unsigned char ack); // IIC读取一个字节
 u8 MPU_IIC_Wait_Ack(void);               // IIC等待ACK信号
 void MPU_IIC_Ack(void);                  // IIC发送ACK信号
 void MPU_IIC_NAck(void);                 // IIC不发送ACK信号
-uint8_t IIC_write_byte_len(uint8_t dev, uint8_t reg, uint8_t len, uint8_t *data);
-void IIC_Send_Byte(u8 txd);
-u8 IIC_Read_Byte(unsigned char ack);
-u8 IIC_Wait_Ack(void);
-void IIC_Start(void);
-void IIC_Stop(void);
-void IIC_Ack(void);
-void IIC_NAck(void);
+// uint8_t IIC_write_byte_len(uint8_t dev, uint8_t reg, uint8_t len, uint8_t *data);
+// void IIC_Send_Byte(u8 txd);
+// u8 IIC_Read_Byte(unsigned char ack);
+// u8 IIC_Wait_Ack(void);
+// void IIC_Start(void);
+// void IIC_Stop(void);
+// void IIC_Ack(void);
+// void IIC_NAck(void);
 
 #endif

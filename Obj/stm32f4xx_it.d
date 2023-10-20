@@ -11,3 +11,16 @@
 .\obj\stm32f4xx_it.o: .\USER\INC\stm32f4xx_conf.h
 .\obj\stm32f4xx_it.o: .\Libraries\STM32F4xx_StdPeriph_Driver\inc\misc.h
 .\obj\stm32f4xx_it.o: .\Libraries\CMSIS\stm32f4xx.h
+.\obj\stm32f4xx_it.o: .\USER\INC\led.h
+.\obj\stm32f4xx_it.o: .\GeneralFunction\inc\sys.h
+.\obj\stm32f4xx_it.o: .\Libraries\STM32F4xx_StdPeriph_Driver\inc\stm32f4xx_gpio.h
+.\obj\stm32f4xx_it.o: .\USER\INC\delay.h
+.\obj\stm32f4xx_it.o: .\uCOSII\CONFIG\includes.h
+.\obj\stm32f4xx_it.o: D:\AAA_Keil\Keil5_MDK\ARM\ARMCC\Bin\..\include\stdio.h
+.\obj\stm32f4xx_it.o: D:\AAA_Keil\Keil5_MDK\ARM\ARMCC\Bin\..\include\string.h
+.\obj\stm32f4xx_it.o: D:\AAA_Keil\Keil5_MDK\ARM\ARMCC\Bin\..\include\ctype.h
+.\obj\stm32f4xx_it.o: D:\AAA_Keil\Keil5_MDK\ARM\ARMCC\Bin\..\include\stdlib.h
+.\obj\stm32f4xx_it.o: D:\AAA_Keil\Keil5_MDK\ARM\ARMCC\Bin\..\include\stdarg.h
+.\obj\stm32f4xx_it.o: .\uCOSII\CORE\ucos_ii.h
+.\obj\stm32f4xx_it.o: .\uCOSII\CONFIG\os_cfg.h
+.\obj\stm32f4xx_it.o: .\uCOSII\PORT\os_cpu.h

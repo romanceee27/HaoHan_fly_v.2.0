@@ -17,6 +17,11 @@
         "stdint.h": "c",
         "main.h": "c",
         "includes.h": "c",
-        "stm32f4xx.h": "c"
+        "stm32f4xx.h": "c",
+        "filt.h": "c",
+        "math.h": "c",
+        "stdio.h": "c",
+        "_mingw_print_push.h": "c",
+        "system.h": "c"
     }
 }

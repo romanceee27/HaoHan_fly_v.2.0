@@ -1,9 +1,14 @@
 #include "mpu6050.h"
 
-static uint8_t MPU6050_buff[14];
+static uint8_t mpu6050_buff[14];
 int16_xyz g_offset_raw, a_offset_raw; // 零飘数据
 int16_xyz g_raw, a_raw;               // 加速度和角速度原始值
+float_angle anglt_real;               // 飞行姿态数据
+float_xyz g_rad, g_radold;            // 弧度制数据
+float_xyz a_filt, a_filtold, g_filt;  // 滤波后的数值
+float accb[3], DCMgb[3][3];           // 方向矩阵
 uint8_t SENSER_OFFSET_FLAG;
+uint8_t acc_update = 0;
 
 /**********************************************
 函数名称：MPU_Init
@@ -15,11 +20,10 @@ u8 MPU_Init(void)
 {
     u8 res;
 
-    GPIO_InitTypeDef GPIO_InitStructure;
+    //GPIO_InitTypeDef GPIO_InitStructure;
 
-    RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);  // 使能AFIO时钟
-    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE); // 先使能外设IO PORTA时钟
-
+   // RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);  // 使能AFIO时钟
+    //RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE); // 先使能外设IO PORTA时钟
     // GPIO_InitStructure.GPIO_Pin = GPIO_Pin_15;        // 端口配置
     // GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;  // 推挽输出
     // GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; // IO口速度为50MHz
@@ -31,7 +35,7 @@ u8 MPU_Init(void)
 
     MPU_IIC_Init();                          // 初始化IIC总线
     MPU_Write_Byte(MPU_PWR_MGMT1_REG, 0X80); // 复位MPU6050
-    delay_ms(100);
+    Delay_ms(100);
     MPU_Write_Byte(MPU_PWR_MGMT1_REG, 0X00); // 唤醒MPU6050
     MPU_Set_Gyro_Fsr(3);                     // 陀螺仪传感器,±2000dps
     MPU_Set_Accel_Fsr(0);                    // 加速度传感器,±2g
@@ -42,7 +46,7 @@ u8 MPU_Init(void)
     MPU_Write_Byte(MPU_INTBP_CFG_REG, 0X80); // INT引脚低电平有效
 
     res = MPU_Read_Byte(MPU_SIGPATH_RST_REG, MPU_DEVICE_ID_REG);
-    if (res == addr) // 器件ID正确,即res = addr = 0x68
+    if (res == 0x68) // 器件ID正确,即res = addr = 0x68
     {
         MPU_Write_Byte(MPU_PWR_MGMT1_REG, 0X01); // 设置CLKSEL,PLL X轴为参考
         MPU_Write_Byte(MPU_PWR_MGMT2_REG, 0X00); // 加速度与陀螺仪都工作
@@ -130,7 +134,7 @@ short MPU_Get_Temperature(void)
     short raw;
     float temp;
 
-    MPU_Read_Len(addr, MPU_TEMP_OUTH_REG, 2, buf);
+    MPU_Read_Len(0X68, MPU_TEMP_OUTH_REG, 2, buf);
     raw = ((u16)buf[0] << 8) | buf[1];
     temp = 36.53 + ((double)raw) / 340;
     return temp * 100;
@@ -146,7 +150,7 @@ u8 MPU_Get_Gyroscope(short *gx, short *gy, short *gz)
 {
     u8 buf[6], res;
 
-    res = MPU_Read_Len(addr, MPU_GYRO_XOUTH_REG, 6, buf);
+    res = MPU_Read_Len(0x68, MPU_GYRO_XOUTH_REG, 6, buf);
     if (res == 0)
     {
         *gx = ((u16)buf[0] << 8) | buf[1];
@@ -165,7 +169,7 @@ u8 MPU_Get_Gyroscope(short *gx, short *gy, short *gz)
 u8 MPU_Get_Accelerometer(short *ax, short *ay, short *az)
 {
     u8 buf[6], res;
-    res = MPU_Read_Len(addr, MPU_ACCEL_XOUTH_REG, 6, buf);
+    res = MPU_Read_Len(0x68, MPU_ACCEL_XOUTH_REG, 6, buf);
     if (res == 0)
     {
         *ax = ((u16)buf[0] << 8) | buf[1];
@@ -251,7 +255,7 @@ u8 MPU_Read_Len(u8 addr, u8 reg, u8 len, u8 *buf)
 u8 MPU_Write_Byte(u8 reg, u8 data)
 {
     MPU_IIC_Start();
-    MPU_IIC_Send_Byte((addr << 1) | 0); // 发送器件地址+写命令
+    MPU_IIC_Send_Byte((0x68 << 1) | 0); // 发送器件地址+写命令
     if (MPU_IIC_Wait_Ack())             // 等待应答
     {
         MPU_IIC_Stop();
@@ -269,19 +273,15 @@ u8 MPU_Write_Byte(u8 reg, u8 data)
     return 0;
 }
 
-uint8_t IIC_Write_
-
-    /**********************************************
-    函数名称：MPU_Read_Byte
-    函数功能：IIC读一个字节
-    函数参数：addr:设备地址；reg:要读的寄存器地址
-    函数返回值：res:读取到的数据
-    **********************************************/
-    u8
-    MPU_Read_Byte(uint8_t addr, uint8_t reg，uin8_t *buf)
+/**********************************************
+函数名称：MPU_Read_Byte
+函数功能：IIC读一个字节
+函数参数：addr:设备地址；reg:要读的寄存器地址
+函数返回值：res:读取到的数据
+**********************************************/
+u8 MPU_Read_Byte(uint8_t addr, uint8_t reg)
 {
     u8 res;
-
     MPU_IIC_Start();
     MPU_IIC_Send_Byte(addr); // 发送器件地址+写命令
     MPU_IIC_Wait_Ack();      // 等待应答
@@ -291,8 +291,7 @@ uint8_t IIC_Write_
     MPU_IIC_Send_Byte(addr + 1); // 发送器件地址+读命令
     MPU_IIC_Wait_Ack();          // 等待应答
     res = MPU_IIC_Read_Byte(0);  // 读取数据,发送nACK
-    *buf = MPU_IIC_Read_Byte(0);
-    MPU_IIC_Stop(); // 产生一个停止条件
+    MPU_IIC_Stop();              // 产生一个停止条件
     return res;
 }
 
@@ -337,7 +336,7 @@ void MPU6050_CalOff_Gyr(void)
 // 读取原始数据
 void mpu6050_read(void)
 {
-    MPU_Read_Len(addr, MPU_ACCEL_XOUTH_REG, 14, MPU6050_buff);
+    MPU_Read_Len(0x68, 0x3B, 14, mpu6050_buff);
 }
 
 // 零飘校准
@@ -357,19 +356,19 @@ uint8_t mpu6050_offset(int16_xyz value, int16_xyz *offset, uint16_t sensivity)
         cnt_a = 1;
 
         sensivity = 0;
-        offset.x = 0;
-        offset.y = 0;
-        offset.z = 0;
+        offset->x = 0;
+        offset->y = 0;
+        offset->z = 0;
     }
 
     tempgx += value.x;
     tempgy += value.y;
-    tempgy += value.z - sensivity;
+    tempgz += value.z - sensivity;
     if (cnt_a == 200)
     {
-        offset.x = tempgx / cnt_a;
-        offset.y = tempgy / cnt_a;
-        offset.z = tempgy / cnt_a;
+        offset->x = tempgx / cnt_a;
+        offset->y = tempgy / cnt_a;
+        offset->z = tempgy / cnt_a;
         cnt_a = 0;
         return 1;
     }
@@ -391,10 +390,31 @@ void mpu_off(void)
     g_raw.y = ((((int16_t)mpu6050_buff[10]) << 8) | mpu6050_buff[11]) - g_offset_raw.y;
     g_raw.z = ((((int16_t)mpu6050_buff[12]) << 8) | mpu6050_buff[13]) - g_offset_raw.z;
 
-    if ()
+    if (GET_FLAG(GYRO_OFFSET))
+    {
+        if (mpu6050_offset(g_raw, &g_offset_raw, 0))
+        {
+            SENSER_FLAG_RESET(GYRO_OFFSET);
+
+            // TODO：此处可能需要将零飘数据存到falsh
+
+            SENSER_FLAG_SET(ACC_OFFSET); // 校准加速度
+        }
+    }
+
+    if (GET_FLAG(GYRO_OFFSET)) // 加速度零飘校准
+    {
+        if (mpu6050_offset(a_raw, &g_offset_raw, 8196))
+        {
+            SENSER_FLAG_RESET(ACC_OFFSET);
+
+            // TODO:同上
+        }
+    }
 }
 
-static float sqrt(float x)
+// 根号计算
+static float invsqrt(float x)
 {
     float halfx = 0.5f * x;
     float y = x;
@@ -405,7 +425,137 @@ static float sqrt(float x)
     return y;
 }
 
+// 对陀螺仪的去零飘数据滤波赋予物理意义，为姿态解算准备
 void prepare_data(void)
 {
-    static uint8_t
+    static uint8_t IIR_mode = 1;
+    mpu6050_read();
+    mpu_off();
+    SortAver_FilterXYZ(&a_raw, &a_filt, 12);
+
+    // 加速度转为国际标准单位
+    a_filt.x = (float)a_filt.x * Acc_Gain * G;
+    a_filt.y = (float)a_filt.y * Acc_Gain * G;
+    a_filt.z = (float)a_filt.z * Acc_Gain * G;
+
+    // 陀螺仪转为弧度/秒
+    g_rad.x = (float)g_raw.x * Gyro_Gr;
+    g_rad.y = (float)g_raw.y * Gyro_Gr;
+    g_rad.z = (float)g_raw.z * Gyro_Gr;
+
+    if (IIR_mode)
+    {
+        a_filt.x = a_filt.x * Kp_New + a_filtold.x * Kp_Old;
+        a_filt.y = a_filt.y * Kp_New + a_filtold.y * Kp_Old;
+        a_filt.z = a_filt.z * Kp_New + a_filtold.z * Kp_Old;
+
+        a_filtold.x = a_filt.x;
+        a_filtold.y = a_filt.y;
+        a_filtold.z = a_filt.z;
+    }
+    accb[0] = a_filt.x;
+    accb[1] = a_filt.y;
+    accb[2] = a_filt.z;
+
+    if (accb[0] && accb[1] && accb[2])
+    {
+        acc_update = 1;
+    }
+}
+
+#define Kp 1.50f     // proportional gain governs rate of convergence to accelerometer/magnetometer
+                     // 比例增益控制加速度计，磁力计的收敛速率
+#define Ki 0.005f    // integral gain governs rate of convergence of gyroscope biases
+                     // 积分增益控制陀螺偏差的收敛速度
+#define halfT 0.005f // half the sample period 采样周期的一半
+
+float q0 = 1, q1 = 0, q2 = 0, q3 = 0;
+float exInt = 0, eyInt = 0,ezInt = 0;
+
+void imu_update(float_xyz *Gyr_rad, float_xyz *Acc_filt, float_angle *Att_Angle)
+{
+    uint8_t i;
+    float matrix[9] = {1.f, 0.0f, 0.0f, 0.0f, 1.f, 0.0f, 0.0f, 0.0f, 1.f}; // 初始化矩阵
+    float ax = Acc_filt->x, ay = Acc_filt->y, az = Acc_filt->z;
+    float gx = Gyr_rad->x, gy = Gyr_rad->y, gz = Gyr_rad->z;
+    float vx, vy, vz;
+    float ex, ey, ez;
+    float norm;
+
+    float q0q0 = q0 * q0;
+    float q0q1 = q0 * q1;
+    float q0q2 = q0 * q2;
+    float q0q3 = q0 * q3;
+    float q1q1 = q1 * q1;
+    float q1q2 = q1 * q2;
+    float q1q3 = q1 * q3;
+    float q2q2 = q2 * q2;
+    float q2q3 = q2 * q3;
+    float q3q3 = q3 * q3;
+
+    if (ax * ay * az == 0)
+        return;
+
+    // 加速度计测量的重力向量(机体坐标系)
+    norm = invsqrt(ax * ax + ay * ay + az * az);
+    ax = ax * norm;
+    ay = ay * norm;
+    az = az * norm;
+    //	printf("ax=%0.2f ay=%0.2f az=%0.2f\r\n",ax,ay,az);
+
+    // 陀螺仪积分估计重力向量(机体坐标系)
+    vx = 2 * (q1q3 - q0q2);
+    vy = 2 * (q0q1 + q2q3);
+    vz = q0q0 - q1q1 - q2q2 + q3q3;
+    // printf("vx=%0.2f vy=%0.2f vz=%0.2f\r\n",vx,vy,vz);
+
+    // 测量的重力向量与估算的重力向量差积求出向量间的误差
+    ex = (ay * vz - az * vy); //+ (my*wz - mz*wy);
+    ey = (az * vx - ax * vz); //+ (mz*wx - mx*wz);
+    ez = (ax * vy - ay * vx); //+ (mx*wy - my*wx);
+
+    // 用上面求出误差进行积分
+    exInt = exInt + ex * Ki;
+    eyInt = eyInt + ey * Ki;
+    ezInt = ezInt + ez * Ki;
+
+    // 将误差PI后补偿到陀螺仪
+    gx = gx + Kp * ex + exInt;
+    gy = gy + Kp * ey + eyInt;
+    gz = gz + Kp * ez + ezInt; // 这里的gz由于没有观测者进行矫正会产生漂移，表现出来的就是积分自增或自减
+
+    // 四元素的微分方程
+    q0 = q0 + (-q1 * gx - q2 * gy - q3 * gz) * halfT;
+    q1 = q1 + (q0 * gx + q2 * gz - q3 * gy) * halfT;
+    q2 = q2 + (q0 * gy - q1 * gz + q3 * gx) * halfT;
+    q3 = q3 + (q0 * gz + q1 * gy - q2 * gx) * halfT;
+
+    // 单位化四元数
+    norm = invsqrt(q0 * q0 + q1 * q1 + q2 * q2 + q3 * q3);
+    q0 = q0 * norm;
+    q1 = q1 * norm;
+    q2 = q2 * norm;
+    q3 = q3 * norm;
+
+    // 矩阵R 将惯性坐标系(n)转换到机体坐标系(b)
+    matrix[0] = q0q0 + q1q1 - q2q2 - q3q3; // 11(前列后行)
+    matrix[1] = 2.f * (q1q2 + q0q3);       // 12
+    matrix[2] = 2.f * (q1q3 - q0q2);       // 13
+    matrix[3] = 2.f * (q1q2 - q0q3);       // 21
+    matrix[4] = q0q0 - q1q1 + q2q2 - q3q3; // 22
+    matrix[5] = 2.f * (q2q3 + q0q1);       // 23
+    matrix[6] = 2.f * (q1q3 + q0q2);       // 31
+    matrix[7] = 2.f * (q2q3 - q0q1);       // 32
+    matrix[8] = q0q0 - q1q1 - q2q2 + q3q3; // 33
+
+    // 四元数转换成欧拉角(Z->Y->X)
+    Att_Angle->yaw += Gyr_rad->z * RadtoDeg * 0.01f;
+    //	Att_Angle->yaw = atan2(2.f * (q1q2 + q0q3), q0q0 + q1q1 - q2q2 - q3q3)* 57.3f; // yaw
+    Att_Angle->rol = -asin(2.f * (q1q3 - q0q2)) * 57.3f;                                 // roll(负号要注意)
+    Att_Angle->pitch = -atan2(2.f * q2q3 + 2.f * q0q1, q0q0 - q1q1 - q2q2 + q3q3) * 57.3f; // pitch
+    for (i = 0; i < 9; i++)
+    {
+        *(&(DCMgb[0][0]) + i) = matrix[i];
+    }
+    // TODO:可加失控保护
 }

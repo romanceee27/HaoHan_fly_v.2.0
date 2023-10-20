@@ -15,3 +15,6 @@
 .\obj\mpu6050.o: .\Libraries\CMSIS\stm32f4xx.h
 .\obj\mpu6050.o: .\Libraries\STM32F4xx_StdPeriph_Driver\inc\stm32f4xx_gpio.h
 .\obj\mpu6050.o: .\USER\INC\delay.h
+.\obj\mpu6050.o: .\Libraries\STM32F4xx_StdPeriph_Driver\inc\stm32f4xx_rcc.h
+.\obj\mpu6050.o: .\USER\INC\filt.h
+.\obj\mpu6050.o: D:\AAA_Keil\Keil5_MDK\ARM\ARMCC\Bin\..\include\math.h

@@ -33,7 +33,7 @@ u8 SPL06_Init(void)
 {
     u8 SPL06_ID;
     SPL06_Write_Byte(RESET_Addr, 0x89); // Reset
-    delay_ms(100);
+    Delay_ms(100);
     SPL06_ID = SPL06_Read_Byte(ID_Addr);   // Read the SPL06's ID
     SPL06_Write_Byte(MEAS_CFG_Addr, 0x07); // Set Working mode and state of sensor
     SPL06_Write_Byte(PRS_CFG_Addr, 0x27);  // Set the PM-RATE and PM-PRC

@@ -5,10 +5,15 @@
 #include "stm32f4xx.h"
 #include "sys.h"
 #include "delay.h"
-#include "inv_mpu.h"
-#include "dmpKey.h"
-#include "dmpmap.h"
-#include "inv_mpu_dmp_motion_driver.h"
+//#include "inv_mpu.h"
+//#include "dmpKey.h"
+//#include "dmpmap.h"
+//#include "inv_mpu_dmp_motion_driver.h"
+#include "filt.h"
+//#include "stm32f4xx_rcc.h"
+
+#include <math.h>
+
 // MPU6050 AD0控制脚
 #define MPU_AD0_CTRL PAout(15) // 控制AD0电平,从而控制MPU地址
 
@@ -104,35 +109,48 @@
 // #define MPU_READ    				0XD1
 // #define MPU_WRITE   				0XD0
 
-extern uint8_t SENSER_OFFSET_FLAG
+extern uint8_t SENSER_OFFSET_FLAG;
 
-#define SENSER_FLAG_SET(FLAG) SENSER_OFFSET_FLAG |= FLAG           // 标志位置1
-#define SENSER_FLAG_RESET(FLAG) SENSER_OFFSET_FLAG &= ~FLAG        // 标志位值0
-#define GET_FLAG(FLAG) (SENSER_OFFSET_FLAG & FLAG) == FLAG ? 1 : 0 // 获取标志位状态
+// #define SENSER_FLAG_SET(FLAG) SENSER_OFFSET_FLAG |= FLAG            // 标志位置1
+// #define SENSER_FLAG_RESET(FLAG) SENSER_OFFSET_FLAG &= ~FLAG         // 标志位值0
+// #define GET_FLAG(FLAG) (SENSER_OFFSET_FLAG & FLAG) == FLAG ? 1 : 0; // 获取标志位状态
 
-    // 三轴整形，原始数据
-    typedef struct
-{
-    int16_t x;
-    int16_t y;
-    int16_t z;
-} int16_xyz;
+#define Kp_New 0.9f          // 互补滤波当前数据的权重
+#define Kp_Old 0.1f          // 互补滤波历史数据的权重
+#define Acc_Gain 0.0001220f  // 加速度变成G (初始化加速度满量程-+4g LSBa = 2*4/65535.0)
+#define Gyro_Gain 0.0609756f // 角速度变成度 (初始化陀螺仪满量程+-2000 LSBg = 2*2000/65535.0)
+#define Gyro_Gr 0.0010641f   // 角速度变成弧度(3.1415/180 * LSBg)
+#define G 9.80665f           // m/s^2
+#define RadtoDeg 57.324841f  // 弧度到角度 (弧度 * 180/3.1415)
+#define DegtoRad 0.0174533f // 角度到弧度 (角度 * 3.1415/180)
 
-// 三轴浮点型
-typedef struct
-{
-    float x;
-    float y;
-    float z;
-} float_xyz;
+// 三轴整形，原始数据
+//typedef struct 
+//{
+//    int16_t x;
+//    int16_t y;
+//    int16_t z;
+//} int16_xyz;
 
-// 姿态解算后的欧拉角
-typedef struct
-{
-    float rol;
-    float yaw;
-    float pitch;
-} float_angle;
+//// 三轴浮点型
+//typedef struct
+//{
+//    float x;
+//    float y;
+//    float z;
+//} float_xyz;
+
+//// 姿态解算后的欧拉角
+//typedef struct
+//{
+//    float rol;
+//    float yaw;
+//    float pitch;
+//} float_angle;
+
+extern float_xyz g_rad, g_radold;            // 弧度制数据
+extern float_xyz a_filt, a_filtold, g_filt;  // 滤波后的数值
+extern float_angle anglt_real;               // 飞行姿态数据
 
 u8 MPU_Init(void);                                  // 初始化MPU6050
 u8 MPU_Write_Len(u8 addr, u8 reg, u8 len, u8 *buf); // IIC连续写
@@ -149,5 +167,13 @@ u8 MPU_Set_Fifo(u8 sens);
 short MPU_Get_Temperature(void);
 u8 MPU_Get_Gyroscope(short *gx, short *gy, short *gz);
 u8 MPU_Get_Accelerometer(short *ax, short *ay, short *az);
-
+void imu_update(float_xyz *Gyr_rad, float_xyz *Acc_filt, float_angle *Att_Angle);
+void prepare_data(void);
+static float invsqrt(float x);
+void mpu_off(void);;
+uint8_t mpu6050_offset(int16_xyz value, int16_xyz *offset, uint16_t sensivity);
+void mpu6050_read(void);
+void MPU6050_CalOff_Gyr(void);
+void MPU6050_CalOff_Acc(void);
+void MPU6050_CalOff(void);
 #endif

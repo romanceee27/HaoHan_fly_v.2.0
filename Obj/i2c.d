@@ -14,3 +14,4 @@
 .\obj\i2c.o: .\Libraries\CMSIS\stm32f4xx.h
 .\obj\i2c.o: .\Libraries\STM32F4xx_StdPeriph_Driver\inc\stm32f4xx_gpio.h
 .\obj\i2c.o: .\USER\INC\delay.h
+.\obj\i2c.o: .\Libraries\STM32F4xx_StdPeriph_Driver\inc\stm32f4xx_rcc.h

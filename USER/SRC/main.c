@@ -3,14 +3,10 @@
 int main(void)
 
 {
-	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
-
-	MPU_Init();
-	LED_Configuration();
-	Delay_init();
-	MPU_Init();
+	system_init();
 
 	while (1)
-	{	
+	{
+		task_schedule();
 	}
 }

@@ -45,20 +45,20 @@ void TIM4_Init(u16 arr,u16 psc)
   *@brief 定时器4中断服务函数
 	**/
 
-void TIM4_IRQHandler(void)
-{
-	if(TIM_GetITStatus(TIM4,TIM_IT_Update)!=RESET)
-	{
-		TIM_ClearITPendingBit(TIM4,TIM_IT_Update);
+// void TIM4_IRQHandler(void)
+// {
+// 	if(TIM_GetITStatus(TIM4,TIM_IT_Update)!=RESET)
+// 	{
+// 		TIM_ClearITPendingBit(TIM4,TIM_IT_Update);
 		
-		pwm_out(&Steering_Engine[0]);
+// 		pwm_out(&Steering_Engine[0]);
 		
 		
-		pwm_out(&Steering_Engine[1]);
+// 		pwm_out(&Steering_Engine[1]);
 		
-		pwm_out(&Steering_Engine[2]);
+// 		pwm_out(&Steering_Engine[2]);
 		
-		pwm_out(&Steering_Engine[3]);
-	}
-}
+// 		pwm_out(&Steering_Engine[3]);
+// 	}
+// }
 

@@ -447,20 +447,15 @@
               <FileType>1</FileType>
               <FilePath>.\USER\SRC\i2c.c</FilePath>
             </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>DMP</GroupName>
-          <Files>
             <File>
-              <FileName>inv_mpu.c</FileName>
+              <FileName>filt.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\USER\SRC\inv_mpu.c</FilePath>
+              <FilePath>.\USER\SRC\filt.c</FilePath>
             </File>
             <File>
-              <FileName>inv_mpu_dmp_motion_driver.c</FileName>
+              <FileName>system.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\USER\SRC\inv_mpu_dmp_motion_driver.c</FilePath>
+              <FilePath>.\USER\SRC\system.c</FilePath>
             </File>
           </Files>
         </Group>

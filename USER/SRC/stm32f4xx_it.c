@@ -32,7 +32,7 @@ void HardFault_Handler(void)
   while (1)
   {
 			Delay_ms(500);
-		  Led8DisData(9);
+		 // Led8DisData(9);
   }
 }
 

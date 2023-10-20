@@ -1,5 +1,181 @@
-Load "c:\\Users\\roman\\Desktop\\Fly\\Code\\Obj\\project.axf" 
-_____^
-*** error 56: cannot open file
-Error: Flash Download failed  -  Could not load file 'c:\Users\roman\Desktop\Fly\Code\Obj\project.axf'
-Flash Load finished at 10:18:23
+*** Using Compiler 'V5.06 update 6 (build 750)', folder: 'D:\AAA_Keil\Keil5_MDK\ARM\ARMCC\Bin'
+Build target 'Target 1'
+compiling stm32f4xx_it.c...
+.\USER\INC\stm32f4xx_it.h(10): error:  #5: cannot open source input file "led8.h": No such file or directory
+  #include "led8.h"
+USER\SRC\stm32f4xx_it.c: 0 warnings, 1 error
+compiling mpu6050.c...
+.\USER\INC\inv_mpu.h(42): error:  #169: expected a declaration
+  };
+.\USER\INC\filt.h(12): error:  #20: identifier "int16_xyz" is undefined
+  void SortAver_FilterXYZ(int16_xyz *acc, float_xyz *Acc_filt, uint8_t N);
+.\USER\INC\filt.h(12): error:  #20: identifier "float_xyz" is undefined
+  void SortAver_FilterXYZ(int16_xyz *acc, float_xyz *Acc_filt, uint8_t N);
+.\USER\INC\filt.h(13): error:  #20: identifier "int16_xyz" is undefined
+  void Aver_FilterXYZ6(int16_xyz *acc, int16_xyz *gry, float_xyz *Acc_filt, float_xyz *Gry_filt, uint8_t N);
+.\USER\INC\filt.h(13): error:  #20: identifier "int16_xyz" is undefined
+  void Aver_FilterXYZ6(int16_xyz *acc, int16_xyz *gry, float_xyz *Acc_filt, float_xyz *Gry_filt, uint8_t N);
+.\USER\INC\filt.h(13): error:  #20: identifier "float_xyz" is undefined
+  void Aver_FilterXYZ6(int16_xyz *acc, int16_xyz *gry, float_xyz *Acc_filt, float_xyz *Gry_filt, uint8_t N);
+.\USER\INC\filt.h(13): error:  #20: identifier "float_xyz" is undefined
+  void Aver_FilterXYZ6(int16_xyz *acc, int16_xyz *gry, float_xyz *Acc_filt, float_xyz *Gry_filt, uint8_t N);
+.\USER\INC\filt.h(14): error:  #20: identifier "int16_xyz" is undefined
+  void Aver_FilterXYZ(int16_xyz *acc, float_xyz *Acc_filt, uint8_t N);
+.\USER\INC\filt.h(14): error:  #20: identifier "float_xyz" is undefined
+  void Aver_FilterXYZ(int16_xyz *acc, float_xyz *Acc_filt, uint8_t N);
+USER\SRC\mpu6050.c(336): warning:  #550-D: variable "tempgz"  was set but never used
+      static int32_t tempgx = 0, tempgy = 0, tempgz = 0;
+USER\SRC\mpu6050.c: 1 warning, 9 errors
+compiling delay.c...
+compiling pwm.c...
+compiling beep.c...
+compiling filt.c...
+.\USER\INC\inv_mpu.h(42): error:  #169: expected a declaration
+  };
+USER\SRC\filt.c(121): error:  #20: identifier "int16_xzy" is undefined
+  void SortAver_FilterXYZ(int16_xzy *acc, float_xzy *Acc_filt, uint8_t n)
+USER\SRC\filt.c(121): error:  #20: identifier "float_xzy" is undefined
+  void SortAver_FilterXYZ(int16_xzy *acc, float_xzy *Acc_filt, uint8_t n)
+USER\SRC\filt.c(162): error:  #20: identifier "int16_xzy" is undefined
+  void Aver_FilterXYZ6(int16_xzy *acc, int16_xzy *gry, float_xzy *Acc_filt, float_xzy *Gry_filt, uint8_t n)
+USER\SRC\filt.c(162): error:  #20: identifier "int16_xzy" is undefined
+  void Aver_FilterXYZ6(int16_xzy *acc, int16_xzy *gry, float_xzy *Acc_filt, float_xzy *Gry_filt, uint8_t n)
+USER\SRC\filt.c(162): error:  #20: identifier "float_xzy" is undefined
+  void Aver_FilterXYZ6(int16_xzy *acc, int16_xzy *gry, float_xzy *Acc_filt, float_xzy *Gry_filt, uint8_t n)
+USER\SRC\filt.c(162): error:  #20: identifier "float_xzy" is undefined
+  void Aver_FilterXYZ6(int16_xzy *acc, int16_xzy *gry, float_xzy *Acc_filt, float_xzy *Gry_filt, uint8_t n)
+USER\SRC\filt.c(208): error:  #20: identifier "int16_xzy" is undefined
+  void Aver_FilterXYZ(int16_xzy *acc, float_xzy *Acc_filt, uint8_t n)
+USER\SRC\filt.c(208): error:  #20: identifier "float_xzy" is undefined
+  void Aver_FilterXYZ(int16_xzy *acc, float_xzy *Acc_filt, uint8_t n)
+USER\SRC\filt.c: 0 warnings, 9 errors
+compiling i2c.c...
+USER\SRC\i2c.c(27): warning:  #188-D: enumerated type mixed with another type
+      GPIO_InitStructure.GPIO_Mode = GPIO_OType_PP;            // 推挽输出
+USER\SRC\i2c.c(50): error:  #136: struct "<unnamed>"  has no field "CRH"
+      MPU_SDA_OUT(); // SDA�? 输出
+USER\SRC\i2c.c(50): error:  #136: struct "<unnamed>"  has no field "CRH"
+      MPU_SDA_OUT(); // SDA�? 输出
+USER\SRC\i2c.c(67): error:  #136: struct "<unnamed>"  has no field "CRH"
+      MPU_SDA_OUT(); // SDA线输�?
+USER\SRC\i2c.c(67): error:  #136: struct "<unnamed>"  has no field "CRH"
+      MPU_SDA_OUT(); // SDA线输�?
+USER\SRC\i2c.c(85): error:  #136: struct "<unnamed>"  has no field "CRH"
+      MPU_SDA_IN(); // SDA设置为输�?
+USER\SRC\i2c.c(85): error:  #136: struct "<unnamed>"  has no field "CRH"
+      MPU_SDA_IN(); // SDA设置为输�?
+USER\SRC\i2c.c(112): error:  #136: struct "<unnamed>"  has no field "CRH"
+      MPU_SDA_OUT();
+USER\SRC\i2c.c(112): error:  #136: struct "<unnamed>"  has no field "CRH"
+      MPU_SDA_OUT();
+USER\SRC\i2c.c(129): error:  #136: struct "<unnamed>"  has no field "CRH"
+      MPU_SDA_OUT();
+USER\SRC\i2c.c(129): error:  #136: struct "<unnamed>"  has no field "CRH"
+      MPU_SDA_OUT();
+USER\SRC\i2c.c(148): error:  #136: struct "<unnamed>"  has no field "CRH"
+      MPU_SDA_OUT();
+USER\SRC\i2c.c(148): error:  #136: struct "<unnamed>"  has no field "CRH"
+      MPU_SDA_OUT();
+USER\SRC\i2c.c(172): error:  #136: struct "<unnamed>"  has no field "CRH"
+      MPU_SDA_IN(); // SDA设置为输�?
+USER\SRC\i2c.c(172): error:  #136: struct "<unnamed>"  has no field "CRH"
+      MPU_SDA_IN(); // SDA设置为输�?
+USER\SRC\i2c.c: 1 warning, 14 errors
+compiling spl06.c...
+.\USER\INC\SPL06.h(68): warning:  #1-D: last line of file ends without a newline
+  #endif
+USER\SRC\spl06.c(36): warning:  #223-D: function "delay_ms" declared implicitly
+      delay_ms(100);
+USER\SRC\spl06.c(176): warning:  #1-D: last line of file ends without a newline
+  }
+USER\SRC\spl06.c: 3 warnings, 0 errors
+compiling main.c...
+.\USER\INC\inv_mpu.h(42): error:  #169: expected a declaration
+  };
+.\USER\INC\filt.h(12): error:  #20: identifier "int16_xyz" is undefined
+  void SortAver_FilterXYZ(int16_xyz *acc, float_xyz *Acc_filt, uint8_t N);
+.\USER\INC\filt.h(12): error:  #20: identifier "float_xyz" is undefined
+  void SortAver_FilterXYZ(int16_xyz *acc, float_xyz *Acc_filt, uint8_t N);
+.\USER\INC\filt.h(13): error:  #20: identifier "int16_xyz" is undefined
+  void Aver_FilterXYZ6(int16_xyz *acc, int16_xyz *gry, float_xyz *Acc_filt, float_xyz *Gry_filt, uint8_t N);
+.\USER\INC\filt.h(13): error:  #20: identifier "int16_xyz" is undefined
+  void Aver_FilterXYZ6(int16_xyz *acc, int16_xyz *gry, float_xyz *Acc_filt, float_xyz *Gry_filt, uint8_t N);
+.\USER\INC\filt.h(13): error:  #20: identifier "float_xyz" is undefined
+  void Aver_FilterXYZ6(int16_xyz *acc, int16_xyz *gry, float_xyz *Acc_filt, float_xyz *Gry_filt, uint8_t N);
+.\USER\INC\filt.h(13): error:  #20: identifier "float_xyz" is undefined
+  void Aver_FilterXYZ6(int16_xyz *acc, int16_xyz *gry, float_xyz *Acc_filt, float_xyz *Gry_filt, uint8_t N);
+.\USER\INC\filt.h(14): error:  #20: identifier "int16_xyz" is undefined
+  void Aver_FilterXYZ(int16_xyz *acc, float_xyz *Acc_filt, uint8_t N);
+.\USER\INC\filt.h(14): error:  #20: identifier "float_xyz" is undefined
+  void Aver_FilterXYZ(int16_xyz *acc, float_xyz *Acc_filt, uint8_t N);
+USER\SRC\main.c: 0 warnings, 9 errors
+compiling inv_mpu.c...
+.\USER\INC\inv_mpu.h(42): error:  #169: expected a declaration
+  };
+USER\SRC\inv_mpu.c(105): error:  #35: #error directive: Gyro driver is missing the system layer implementations.
+  #error  Gyro driver is missing the system layer implementations.
+USER\SRC\inv_mpu.c: 0 warnings, 2 errors
+compiling led.c...
+compiling tim4.c...
+compiling inv_mpu_dmp_motion_driver.c...
+.\USER\INC\inv_mpu.h(42): error:  #169: expected a declaration
+  };
+USER\SRC\inv_mpu_dmp_motion_driver.c(66): error:  #35: #error directive: Gyro driver is missing the system layer implementations.
+  #error  Gyro driver is missing the system layer implementations.
+USER\SRC\inv_mpu_dmp_motion_driver.c: 0 warnings, 2 errors
+compiling system.c...
+.\USER\INC\inv_mpu.h(42): error:  #169: expected a declaration
+  };
+.\USER\INC\filt.h(12): error:  #20: identifier "int16_xyz" is undefined
+  void SortAver_FilterXYZ(int16_xyz *acc, float_xyz *Acc_filt, uint8_t N);
+.\USER\INC\filt.h(12): error:  #20: identifier "float_xyz" is undefined
+  void SortAver_FilterXYZ(int16_xyz *acc, float_xyz *Acc_filt, uint8_t N);
+.\USER\INC\filt.h(13): error:  #20: identifier "int16_xyz" is undefined
+  void Aver_FilterXYZ6(int16_xyz *acc, int16_xyz *gry, float_xyz *Acc_filt, float_xyz *Gry_filt, uint8_t N);
+.\USER\INC\filt.h(13): error:  #20: identifier "int16_xyz" is undefined
+  void Aver_FilterXYZ6(int16_xyz *acc, int16_xyz *gry, float_xyz *Acc_filt, float_xyz *Gry_filt, uint8_t N);
+.\USER\INC\filt.h(13): error:  #20: identifier "float_xyz" is undefined
+  void Aver_FilterXYZ6(int16_xyz *acc, int16_xyz *gry, float_xyz *Acc_filt, float_xyz *Gry_filt, uint8_t N);
+.\USER\INC\filt.h(13): error:  #20: identifier "float_xyz" is undefined
+  void Aver_FilterXYZ6(int16_xyz *acc, int16_xyz *gry, float_xyz *Acc_filt, float_xyz *Gry_filt, uint8_t N);
+.\USER\INC\filt.h(14): error:  #20: identifier "int16_xyz" is undefined
+  void Aver_FilterXYZ(int16_xyz *acc, float_xyz *Acc_filt, uint8_t N);
+.\USER\INC\filt.h(14): error:  #20: identifier "float_xyz" is undefined
+  void Aver_FilterXYZ(int16_xyz *acc, float_xyz *Acc_filt, uint8_t N);
+USER\SRC\system.c: 0 warnings, 9 errors
+compiling misc.c...
+compiling stm32f4xx_exti.c...
+compiling stm32f4xx_gpio.c...
+compiling stm32f4xx_dma.c...
+compiling stm32f4xx_can.c...
+compiling stm32f4xx_rcc.c...
+compiling stm32f4xx_crc.c...
+compiling stm32f4xx_usart.c...
+compiling stm32f4xx_adc.c...
+compiling stm32f4xx_tim.c...
+compiling stm32f4xx_cryp.c...
+compiling stm32f4xx_cryp_aes.c...
+compiling stm32f4xx_cryp_des.c...
+compiling stm32f4xx_dbgmcu.c...
+compiling stm32f4xx_cryp_tdes.c...
+compiling stm32f4xx_dac.c...
+compiling stm32f4xx_dcmi.c...
+compiling stm32f4xx_flash.c...
+compiling stm32f4xx_hash.c...
+compiling stm32f4xx_hash_md5.c...
+compiling stm32f4xx_fsmc.c...
+compiling stm32f4xx_hash_sha1.c...
+compiling stm32f4xx_iwdg.c...
+compiling stm32f4xx_i2c.c...
+compiling stm32f4xx_pwr.c...
+compiling stm32f4xx_rng.c...
+compiling stm32f4xx_sdio.c...
+compiling stm32f4xx_spi.c...
+compiling stm32f4xx_rtc.c...
+compiling stm32f4xx_syscfg.c...
+compiling system_stm32f4xx.c...
+compiling stm32f4xx_wwdg.c...
+compiling os_cpu_c.c...
+".\Obj\project.axf" - 55 Error(s), 5 Warning(s).
+Target not created.
+Build Time Elapsed:  00:00:04
